@@ -10,19 +10,23 @@
 class Layers
 {
     public:
-        // Initializers
+        // Constructors
         Layers();
         Layers(int layer_index, int num_nodes, int next_layer_dim);
 
         void activate_nodes(Layers &prev_layer);
-        void calc_hidden_gradients(Layers &right_layer);
+        void hidden_gradients(Layers &right_layer);
         void update_weights(Layers &left_layer);
 
-        // Vars
+        // Pub vars?
+        std::map<int, Node> map_of_nodes;
+        int output_weight_dim;
+        
+        // Private vars?
         int layer_idx;
         int total_nodes;
-        int output_weight_dim;
-        std::map<int, Node> map_of_nodes;
+        
+        
         double learning_rate;
 };
 

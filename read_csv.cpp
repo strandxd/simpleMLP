@@ -15,7 +15,8 @@ class MyData
     
         void create_dset()
         {
-            std::string fname = "test_iris.csv";
+            std::string fname = "iris.csv";
+            // std::string fname = "iris_std.csv";
             // std::cout<<"Enter the file name: ";
             // std::cin>>fname;
             

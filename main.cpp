@@ -92,11 +92,11 @@ void print_row(std::vector<double> vec)
 
 int main()
 {
-    int rows = 100000;
-    int cols = 20;
-    // Create and print dset
-    std::vector< std::vector<double> > new_dset = create_dset(rows, cols);
-    std::vector<int> y_true = create_y_true(rows);
+    // int rows = 100000;
+    // int cols = 20;
+    // // Create and print dset
+    // std::vector< std::vector<double> > new_dset = create_dset(rows, cols);
+    // std::vector<int> y_true = create_y_true(rows);
     // for (int row = 0; row < new_dset.size(); row++){
     //     for (int col = 0; col < new_dset[0].size(); col++){
     //         if (col == new_dset[0].size()-1){
@@ -114,20 +114,20 @@ int main()
 
     data_class.create_dset();
 
-    MLP test_mlp(new_dset[0]);
-    int epoch = 10;
+    MLP test_mlp(data_class.my_data[0]);
+    int epoch = 25;
     int new_epoch = 1;
+    int iter = 1;
 
     for (int e = 0; e < epoch; e++){
-        int iter = 0;
-        for (int row = 0; row < new_dset.size(); row++){
+        for (int row = 0; row < data_class.my_data.size(); row++){
             std::cout << "ITERATION #" << iter << std::endl;
             // y_true should have as many inputs as rows in dset
-            assert(y_true.size() == new_dset.size());
+            assert(data_class.new_y_true.size() == data_class.my_data.size()); // Skal ikke være her vel
 
-            test_mlp.feed_forward(new_dset[row]);
-            test_mlp.backpropagate(y_true[row]);
-            test_mlp.print_results(y_true[row]);
+            test_mlp.feed_forward(data_class.my_data[row]);
+            test_mlp.print_results(data_class.new_y_true[row]);
+            test_mlp.backpropagate(data_class.new_y_true[row]);
             // test_mlp.print_output_values();
 
             iter++;

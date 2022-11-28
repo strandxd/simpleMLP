@@ -63,7 +63,7 @@ MLP::MLP(std::vector<double> &input_row)
 */
 void MLP::feed_forward(std::vector<double> &input_data)
 {
-    // Add values to input layer. (remember bias is last node)
+    // Add values to input layer (bias is last node).
     int total_input_nodes = map_of_layers[0].total_nodes;
     for (int i = 0; i < total_input_nodes; i++){
         if (i == total_input_nodes-1){ // Bias node
@@ -74,16 +74,24 @@ void MLP::feed_forward(std::vector<double> &input_data)
         }
     }
 
+    // PRINT INPUT VALS. DELETE
+    std::cout << "INPUT VALS: " << std::endl;
+    for (int i = 0; i < map_of_layers[0].map_of_nodes.size(); i++){
+        std::cout << map_of_layers[0].map_of_nodes[i].get_output_value() << " ";
+    }
+    std::cout << std::endl;
+    // PRINT INPUT VALS. DELETE
+
     // Loop through the rest of the layers
     for (int layer = 1; layer < map_of_layers.size(); layer++){
-        Layers &prev_layer = map_of_layers[layer-1];
+        Layers &left_layer = map_of_layers[layer-1];
         Layers &current_layer = map_of_layers[layer];
 
-        current_layer.activate_nodes(prev_layer);
+        current_layer.activate_nodes(left_layer);
 
         // Loop through nodes in layer except bias node (last node)
         for (int node = 0; node < map_of_layers[layer].total_nodes - 1; node++){
-            map_of_layers[layer].activate_nodes(prev_layer);
+            map_of_layers[layer].activate_nodes(left_layer);
         }
     }
 }
@@ -93,19 +101,22 @@ void MLP::backpropagate(const int y_true)
 {
     // Calculate error (y_true - output_value)
     Layers &output_layer = map_of_layers[map_of_layers.rbegin()->first];
-    // 
     output_error = output_layer.map_of_nodes[0].get_output_value() - y_true;
-    // output_error = pow(output_error, 2); // square the error
+    output_error = pow(output_error, 2); // square the error
+
+    // Log loss (binary crossentropy)
+    // double out_val = output_layer.map_of_nodes[0].get_output_value();
+    // output_error = -((y_true * log(out_val)) + ((1 - y_true) * log(1 - out_val))); 
+    // Log loss (binary crossentropy)
 
     // Calculate outputlayer gradient
-    output_layer.map_of_nodes[0].calc_output_gradient(y_true);
+    output_layer.map_of_nodes[0].output_gradient(y_true);
 
-    // Calculate hidden layer gradient (from 1st hidden layer from right to )
-    // HERES PROBLEM!!!
+    // Calculate hidden layer gradient (from last hidden layer down to (including) 1st hidden layer)
     for (int layer = map_of_layers.size()-2; layer > 0; layer--){
         Layers &right_layer = map_of_layers[layer + 1];
 
-        map_of_layers[layer].calc_hidden_gradients(right_layer);
+        map_of_layers[layer].hidden_gradients(right_layer);
     }
     // From output layer to first hidden layer, update weights
     for (int layer = map_of_layers.size() - 1; layer > 0; layer--){
@@ -117,25 +128,24 @@ void MLP::backpropagate(const int y_true)
 
 void MLP::print_results(const int y_true)
 {
-    Layers &output_layer = map_of_layers[map_of_layers.rbegin()->first];
+    Layers &output_layer = map_of_layers[map_of_layers.size()-1];
 
-    double predicted_value = output_layer.map_of_nodes[0].output_value;
+    double predicted_value = output_layer.map_of_nodes[0].get_output_value();
 
-    std::cout << "***** NEW ITERATION *****" << std::endl;
     std::cout << "True value: " << y_true << std::endl;;
-    std::cout << "Predicted value = " << predicted_value << std::endl;
-    std::cout << "Error: " << output_error << std::endl;
-    std::cout << "\n\n";
+    std::cout << "Predicted value: " << predicted_value << std::endl;
+    std::cout << "Loss: " << output_layer.map_of_nodes[0].get_loss() << std::endl;
+    std::cout << "\n";
     
-    int hidden_l = map_of_layers.size() - 2;
-    std::cout << "Weights: ";
-    for (int node = 0; node < map_of_layers[hidden_l].map_of_nodes.size(); node++){
-        for (int w = 0; 
-        w < map_of_layers[hidden_l].map_of_nodes[node].output_weights.size(); w++){
-            std::cout << map_of_layers[hidden_l].map_of_nodes[node].output_weights[w] << " ";
-        }
-    }
-    std::cout << '\n';
+    // int hidden_l = map_of_layers.size() - 2;
+    // std::cout << "Weights: ";
+    // for (int node = 0; node < map_of_layers[hidden_l].map_of_nodes.size(); node++){
+    //     for (int w = 0; 
+    //     w < map_of_layers[hidden_l].map_of_nodes[node].output_weights.size(); w++){
+    //         std::cout << map_of_layers[hidden_l].map_of_nodes[node].output_weights[w] << " ";
+    //     }
+    // }
+    // std::cout << '\n' << std::endl;
 }
 
 void MLP::print_output_values()
@@ -143,7 +153,7 @@ void MLP::print_output_values()
     for (int layer = 0; layer < map_of_layers.size(); layer++){
         std::cout << "Layer #" << layer << std::endl;
         for (int node = 0; node < map_of_layers[layer].map_of_nodes.size(); node++){
-            double node_out = map_of_layers[layer].map_of_nodes[node].output_value;
+            double node_out = map_of_layers[layer].map_of_nodes[node].get_output_value();
             std::cout << "Neuron #" << node << " . Value: " << node_out << '\n';
         }
         std::cout << std::endl;
