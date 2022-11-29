@@ -24,7 +24,7 @@ Node::Node() {}
 Node::Node(int idx, int output_weight_dim, bool bias_node, double weight_init)
 {
     curr_node_idx = idx;
-    // Fix this a bit cleaner. Dont make array then add numbers
+    // NBNB: Fix this a bit cleaner. Dont make array then add numbers
     output_weights.resize(output_weight_dim);
 
     // Initialize weights
@@ -36,24 +36,18 @@ Node::Node(int idx, int output_weight_dim, bool bias_node, double weight_init)
     if (bias_node){
         set_output_value_bias();
     }
-
-    // // Print weights (DELETE)
-    // std::cout << "Initial weights : \n";
-    // for (int i =0; i < output_weights.size(); i++){
-    //     std::cout << output_weights[i] << " ";
-    // }
-    // std::cout << std::endl;
-    // std::cout << "Output value: " << output_value << std::endl;
 }
 
 /**
  * Calculates gradient for output layer node.
  * 
- * @param y_true: true value of sample target.
+ * @param y_true: true target value.
 */
 void Node::output_gradient(const int y_true)
 {
+    loss = 0.0;
     loss = output_value - y_true;
+    // Sjekk en video om dette --> Trooor sigmoid skal med altså
     // double delta_output = out_err - y_true;
     gradient = loss * sigmoid_derivative();
 }

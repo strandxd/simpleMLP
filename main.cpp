@@ -8,146 +8,33 @@
 
 #include "mlp.h"
 #include "layers.h"
-#include "read_csv.cpp"
-
-std::vector< std::vector<double> > create_dataset()
-{
-std::string fname;
-std::cout<<"Enter the file name: ";
-std::cin>>fname;
- 
-std::vector<std::vector<std::string>> content;
-std::vector<std::string> row;
-std::string line, word;
-double num;
- 
-std::fstream file (fname, std::ios::in);
-if(file.is_open())
-{
-while(getline(file, line))
-{
-row.clear();
- 
-std::stringstream str(line);
- 
-while(getline(str, word, ','))
-row.push_back(word);
-content.push_back(row);
-}
-}
-else
-std::cout<<"Could not open the file\n";
-
-std::vector< std::vector<double> > new_m(content.size(), 
-std::vector<double>(content[0].size()));
- 
-for(int i=0;i<content.size();i++){
-    
-    for(int j=0;j<content[i].size();j++){
-        new_m[i][j] = std::stof(content[i][j]);
-    }
-}
-
-for (int row=0; row < new_m.size(); row++){
-    for (int col = 0; col < new_m[0].size(); col++){
-        std::cout << new_m[row][col] << " ";
-    }
-    std::cout << std::endl;
-}
- 
-return new_m;
-}
-
-std::vector< std::vector<double> > create_dset(int rows, int cols)
-{
-    srand (time(NULL));
-    std::vector< std::vector<double> > dset(rows, std::vector<double>(cols));
-
-    for (int row = 0; row < dset.size(); row++){
-        for (int col = 0; col < dset[0].size(); col++){
-            dset[row][col] = (rand() % 5);
-        }
-    }
-
-    return dset;
-
-}
-
-std::vector <int> create_y_true(int rows)
-{
-    srand (time(NULL));
-    std::vector<int> y_true(rows);
-    for (int i = 0; i < rows; i++){
-        y_true[i] = rand() % 2; // 0 or 1
-    }
-    return y_true;
-}
-
-void print_row(std::vector<double> vec)
-{
-    for (int i = 0; i < vec.size(); i++){
-        std::cout << vec[i] << " ";
-    }
-}
+#include "read_data.h"
 
 int main()
 {
-    // int rows = 100000;
-    // int cols = 20;
-    // // Create and print dset
-    // std::vector< std::vector<double> > new_dset = create_dset(rows, cols);
-    // std::vector<int> y_true = create_y_true(rows);
-    // for (int row = 0; row < new_dset.size(); row++){
-    //     for (int col = 0; col < new_dset[0].size(); col++){
-    //         if (col == new_dset[0].size()-1){
-    //             std::cout << new_dset[row][col] << " " << y_true[row];
-    //         }
-    //         else{
-    //             std::cout << new_dset[row][col] << " ";
-    //         }
-            
-    //     }
-    //     std::cout << std::endl;
-    // }
+    // Read data from csv file
+    ReadData read_data;
+    read_data.create_dataset("iris.csv");
 
-    MyData data_class;
+    // Create 
+    MLP mlp(read_data.get_my_data()[0]);
+    MLP::learning_rate = 0.1;
 
-    data_class.create_dset();
-
-    MLP test_mlp(data_class.my_data[0]);
-    int epoch = 25;
-    int new_epoch = 1;
+    int epoch = 10;
     int iter = 1;
 
     for (int e = 0; e < epoch; e++){
-        for (int row = 0; row < data_class.my_data.size(); row++){
-            std::cout << "ITERATION #" << iter << std::endl;
+        for (int row = 0; row < read_data.get_my_data().size(); row++){
+            std::cout << "EPOCH #" << e+1 << ". TOTAL ITERATION #" << iter << std::endl;
             // y_true should have as many inputs as rows in dset
-            assert(data_class.new_y_true.size() == data_class.my_data.size()); // Skal ikke være her vel
 
-            test_mlp.feed_forward(data_class.my_data[row]);
-            test_mlp.print_results(data_class.new_y_true[row]);
-            test_mlp.backpropagate(data_class.new_y_true[row]);
-            // test_mlp.print_output_values();
+            // One iteration contains following steps:
+            mlp.insert_sample(read_data.get_my_data()[row]);
+            mlp.feed_forward();
+            mlp.print_results(read_data.get_y_true()[row]);
+            mlp.backpropagate(read_data.get_y_true()[row]);
 
             iter++;
         }
-        new_epoch++;
     }
-
-
-    // std::cout << "\nWeights hidden: \n";
-    // int hidden = test_mlp.map_of_layers.size() - 2;
-    // for (double weight : test_mlp.map_of_layers[0].map_of_nodes[2].output_weights){
-    //     std::cout << weight << " ";
-    // }
-
-
-    // MLP new_mlp(new_dset[0]);
-
-    // new_mlp.feed_forward(new_dset[0]);
-    // std::cout << "PAssed forward\n";
-    // new_mlp.print_results();
-    // std::cout << "Passed print";
-
 }

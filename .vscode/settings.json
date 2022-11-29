@@ -80,6 +80,8 @@
     "typeinfo": "cpp",
     "ctime": "cpp",
     "fstream": "cpp",
-    "sstream": "cpp"
+    "sstream": "cpp",
+    "chrono": "cpp",
+    "ratio": "cpp"
   }
 }

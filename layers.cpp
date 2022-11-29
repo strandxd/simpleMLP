@@ -9,17 +9,19 @@
 /**
  * General note: Just to avoid confusion when referencing layers in the following section.
  * We think of the neural network as going left to right through forward propagation.
- * When referencing layers, current layer is obviously the one we are in, and layers to the left 
- * and right of this layer are related to this forward propagation perspective. This then also 
- * applies when we loop through the layer in reverse (backpropagation).
+ * When referencing layers, current layer is obviously the one we are in, and layers to 
+ * the left and right of this layer are related to this forward propagation perspective. 
+ * This then also applies when we loop through the layer in reverse (backpropagation).
 */
+
+// double Layers::learning_rate = 0.1; // Set learning rate
 
 
 /// @brief Empty constructor
 Layers::Layers() {}
 
 /**
- * Constructing layer in network. Initializes layer with a user specifed number of nodes.
+ * Constructing layer object in network. Initializes layer with a user specifed number of nodes. 
  * Layer gets added to a map of <layerNumber, layerObject>.
  * 
  * @param layer_index: layer number.
@@ -31,11 +33,11 @@ Layers::Layers(int layer_index, int num_nodes, int next_layer_dim)
     output_weight_dim = next_layer_dim;
     total_nodes = num_nodes + 1; // Add bias node
     layer_idx = layer_index;
-    learning_rate = 0.1;
+    // learning_rate = 0.1;
 
     // Bias node is the last iteration (node = total_nodes-1)
     for (int node = 0; node < total_nodes; node++){ 
-        if (node == total_nodes-1){ // Create bias node with out_value=1.0
+        if (node == total_nodes-1){ // Create bias node with "output value=1.0"
             map_of_nodes[node] = Node(node, next_layer_dim, true);
         }
         else{
@@ -86,7 +88,7 @@ void Layers::hidden_gradients(Layers &right_layer)
  * 
  * @param left_layer: reference of layer object to the left of current layer.
 */
-void Layers::update_weights(Layers &left_layer)
+void Layers::update_weights(Layers &left_layer, double learning_rate)
 {
     double delta_weight = 0.0;
     // Loop through every node in current layer (not bias)
@@ -99,14 +101,8 @@ void Layers::update_weights(Layers &left_layer)
 
             double delta_weight = 
             -(learning_rate * left_node.get_output_value() * curr_node.get_gradient());
-            // std::cout << "Left node out val: " << left_node.output_value << std::endl;
-            // std::cout << "Curr node out val: " << curr_node.output_value << std::endl;
-            // std::cout << "Curr node gradient: " << curr_node.gradient << std::endl;
-            // std::cout << "DELTA W: " << delta_weight << std::endl;
 
-            // std::cout << "Weight pre fix: " << left_node.output_weights[curr_n] << std::endl;
             left_node.output_weights[curr_n] += delta_weight; // Or is it -=??
-            // std::cout << "Weight post fix: " << left_node.output_weights[curr_n] << std::endl;
         }
     }
 }
@@ -114,7 +110,7 @@ void Layers::update_weights(Layers &left_layer)
 /**
  * Activation of nodes
 */
-void Layers::activate_nodes(Layers &prev_layer)
+void Layers::activate_nodes(Layers &left_layer)
 {
     // Inside current layer, has access to prev layer
     int current_node_id;
@@ -126,9 +122,8 @@ void Layers::activate_nodes(Layers &prev_layer)
         current_node_id = map_of_nodes[n_curr].get_curr_node_idx();
 
         // Loop through all nodes (incl bias) in previous layer and add sum of: 
-        // output_weights[current_node_id] * output_value
-        for (int n_prev = 0; n_prev < prev_layer.total_nodes; n_prev++){
-            Node &prev_node = prev_layer.map_of_nodes[n_prev];
+        for (int n_prev = 0; n_prev < left_layer.total_nodes; n_prev++){
+            Node &prev_node = left_layer.map_of_nodes[n_prev];
             z += prev_node.output_weights[n_curr] * prev_node.get_output_value();
         }
         // Activate the current node
@@ -136,6 +131,3 @@ void Layers::activate_nodes(Layers &prev_layer)
         map_of_nodes[n_curr].set_output_value(out_value);
     }
 }
-
-
-

@@ -16,7 +16,7 @@ class Layers
 
         void activate_nodes(Layers &prev_layer);
         void hidden_gradients(Layers &right_layer);
-        void update_weights(Layers &left_layer);
+        void update_weights(Layers &left_layer, double learning_rate);
 
         // Pub vars?
         std::map<int, Node> map_of_nodes;
@@ -25,9 +25,6 @@ class Layers
         // Private vars?
         int layer_idx;
         int total_nodes;
-        
-        
-        double learning_rate;
 };
 
 #endif

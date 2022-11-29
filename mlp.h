@@ -13,9 +13,10 @@ class MLP
     public:
         // Constructors
         MLP();
-        MLP(std::vector<double> &input_row);
+        MLP(std::vector<double> &input_row, bool default_init = false);
 
-        void feed_forward(std::vector<double> &input_data);
+        void insert_sample(std::vector<double> &input_data);
+        void feed_forward();
         void backpropagate(const int y_true);
 
         void print_results(const int y_true);
@@ -24,6 +25,7 @@ class MLP
         // Vars
         std::map<int, Layers> map_of_layers;
         double output_error;
+        static double learning_rate;
 };
 
 
