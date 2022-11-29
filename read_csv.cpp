@@ -18,7 +18,7 @@ class MyData
             std::string fname = "iris.csv";
             // std::string fname = "iris_std.csv";
             // std::cout<<"Enter the file name: ";
-            // std::cin>>fname;
+            // std::cin>>fname
             
             std::vector<std::vector<std::string>> content;
             std::vector<std::string> row;
