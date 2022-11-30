@@ -99,22 +99,23 @@ void Layers::hidden_gradients(Layers &right_layer)
 void Layers::update_weights(Layers &left_layer, double learning_rate)
 {
     double delta_weight = 0.0;
-    // Loop through every node in current layer (not bias)
+    // Loop through every node in current layer (excl. bias)
     for (int curr_n = 0; curr_n < get_total_nodes()-1; curr_n++){
         Node &curr_node = map_of_nodes[curr_n];
 
-        // Loop through every node in left layer (incl bias)
+        // Loop through every node in left layer (incl. bias)
         for (int left_n = 0; left_n < left_layer.get_total_nodes(); left_n++){
             Node &left_node = left_layer.map_of_nodes[left_n];
 
             double delta_weight = 
             -(learning_rate * left_node.get_output_value() * curr_node.get_gradient());
 
-            left_node.output_weights[curr_n] += delta_weight; // Or is it -=??
+            left_node.output_weights[curr_n] += delta_weight; 
         }
     }
 }
 
+// TODO: write this
 /**
  * Activation of nodes
 */
@@ -125,17 +126,16 @@ void Layers::activate_nodes(Layers &left_layer)
     double out_value;
 
     // Loop through nodes in current layer (excl. bias)
-    for (int n_curr = 0; n_curr < get_total_nodes()-1; n_curr++){
+    for (int curr_n = 0; curr_n < get_total_nodes()-1; curr_n++){
         double z = 0.0;
-        current_node_id = map_of_nodes[n_curr].get_curr_node_idx();
 
-        // Loop through all nodes (incl bias) in previous layer and add sum of: 
-        for (int n_prev = 0; n_prev < left_layer.get_total_nodes(); n_prev++){
-            Node &prev_node = left_layer.map_of_nodes[n_prev];
-            z += prev_node.output_weights[n_curr] * prev_node.get_output_value();
+        // Loop through nodes (incl bias) in previous layer and add sum of z (pre activation sum)
+        for (int left_n = 0; left_n < left_layer.get_total_nodes(); left_n++){
+            Node &left_node = left_layer.map_of_nodes[left_n];
+            z += left_node.output_weights[curr_n] * left_node.get_output_value();
         }
         // Activate the current node
-        out_value = map_of_nodes[n_curr].sigmoid(z);
-        map_of_nodes[n_curr].set_output_value(out_value);
+        out_value = map_of_nodes[curr_n].sigmoid(z);
+        map_of_nodes[curr_n].set_output_value(out_value);
     }
 }

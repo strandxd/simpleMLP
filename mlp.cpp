@@ -87,7 +87,6 @@ MLP::~MLP()
     map_of_layers.clear();
 }
 
-
 /**
  * Fill input layer with values from an inserted sample row.
  * 
@@ -104,34 +103,20 @@ void MLP::insert_sample(std::vector<double> const &input_data)
             map_of_layers[0].map_of_nodes[i].set_output_value(input_data[i]);
         }
     }
-
-    // // PRINT INPUT VALS. DELETE
-    // std::cout << "INPUT VALS: " << std::endl;
-    // for (int i = 0; i < map_of_layers[0].map_of_nodes.size(); i++){
-    //     std::cout << map_of_layers[0].map_of_nodes[i].get_output_value() << " ";
-    // }
-    // std::cout << std::endl;
-    // // PRINT INPUT VALS. DELETE
 }
-
 
 /**
  * Feed forward process of neural network. From first hidden layer to output layer, calculate 
- * activatons of individual nodes in each layer.
+ * activatons of indivi dual nodes in each layer.
 */
 void MLP::feed_forward()
 {
-    // Loop through 1st hidden layer to ouput layer
+    // Loop through 1st hidden layer to (including) ouput layer
     for (int layer = 1; layer < map_of_layers.size(); layer++){
         Layers &left_layer = map_of_layers[layer-1];
         Layers &current_layer = map_of_layers[layer];
 
         current_layer.activate_nodes(left_layer);
-
-        // Loop through nodes in layer (excl. bias node)
-        for (int node = 0; node < map_of_layers[layer].get_total_nodes() - 1; node++){
-            map_of_layers[layer].activate_nodes(left_layer);
-        }
     }
 }
 

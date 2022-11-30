@@ -55,11 +55,8 @@ Node::~Node()
 */
 void Node::output_gradient(const int y_true)
 {
-    loss = 0.0; // Not necessary
-    loss = output_value - y_true;
-    // Sjekk en video om dette --> Trooor sigmoid skal med altså
-    // double delta_output = out_err - y_true;
-    gradient = loss * sigmoid_derivative();
+    error = output_value - y_true;
+    gradient = error * sigmoid_derivative();
 }
 
 /**

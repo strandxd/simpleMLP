@@ -28,7 +28,6 @@ int main()
             mlp.feed_forward();
             mlp.backpropagate(sample_y_true[iter]);
         }
-
         auto end = std::chrono::high_resolution_clock::now();
         double time = double(std::chrono::duration_cast <std::chrono::nanoseconds> 
                      (end-start).count());
