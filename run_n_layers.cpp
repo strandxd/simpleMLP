@@ -33,7 +33,7 @@ void run_mlp(std::vector< std::vector<double> > dataset, std::vector<double> y_t
 {
     // Create mlp and set learning rate
     MLP mlp(dataset[0], n_layers);
-    MLP::learning_rate = 0.1;
+    mlp.set_learning_rate(0.2);
 
     for (int iter = 0; iter < dataset.size(); iter++){
         // std::cout << "EPOCH #" << e+1 << ". TOTAL ITERATION #" << iter+1 << std::endl;
@@ -46,3 +46,4 @@ void run_mlp(std::vector< std::vector<double> > dataset, std::vector<double> y_t
         mlp.backpropagate(y_true[iter]);
     }
 }
+

@@ -33,7 +33,7 @@ void run_mlp(std::vector< std::vector<double> > dataset, std::vector<double> y_t
 {
     // Create mlp and set learning rate
     MLP mlp(dataset[0], true);
-    MLP::learning_rate = 0.1;
+    mlp.set_learning_rate(0.2);
 
     int epoch = epochs;
 
