@@ -11,21 +11,27 @@
 class MLP
 {
     public:
-        // Constructors
+        // Constructors & destructor
         MLP();
-        MLP(std::vector<double> &input_row, bool default_init = false);
+        MLP(std::vector<double> const &input_row, int num_layers = 0, bool default_init = false);
+        ~MLP();
 
-        void insert_sample(std::vector<double> &input_data);
+        // Run network
+        void insert_sample(std::vector<double> const &input_data);
         void feed_forward();
         void backpropagate(const int y_true);
 
+        // Set functions
+        void set_learning_rate(double value) { learning_rate = value; }
+
+        // Print
         void print_results(const int y_true);
         void print_output_values();
 
-        // Vars
         std::map<int, Layers> map_of_layers;
-        double output_error;
-        static double learning_rate;
+
+        private:
+            static double learning_rate;
 };
 
 

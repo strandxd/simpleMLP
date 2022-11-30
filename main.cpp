@@ -18,23 +18,28 @@ int main()
 
     // Create 
     MLP mlp(read_data.get_my_data()[0]);
-    MLP::learning_rate = 0.1;
+    mlp.set_learning_rate(0.3);
 
-    int epoch = 10;
+    int epoch = 100;
     int iter = 1;
 
+    // Loop through e epochs
     for (int e = 0; e < epoch; e++){
+        // For every epoch, loop through entire dataset (i.e. 1 iteration = 1 sample)
         for (int row = 0; row < read_data.get_my_data().size(); row++){
+            std::cout << "\n*********************************" << std::endl;
             std::cout << "EPOCH #" << e+1 << ". TOTAL ITERATION #" << iter << std::endl;
-            // y_true should have as many inputs as rows in dset
 
             // One iteration contains following steps:
             mlp.insert_sample(read_data.get_my_data()[row]);
             mlp.feed_forward();
+            mlp.print_output_values();
             mlp.print_results(read_data.get_y_true()[row]);
             mlp.backpropagate(read_data.get_y_true()[row]);
 
             iter++;
+            std::cout << "*********************************" << std::endl;
+            std::cout << '\n';
         }
     }
 }

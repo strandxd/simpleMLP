@@ -38,6 +38,16 @@ Node::Node(int idx, int output_weight_dim, bool bias_node, double weight_init)
     }
 }
 
+
+Node::~Node()
+{
+    output_weights.clear();
+    output_value = 0;
+    curr_node_idx = 0;
+    gradient = 0.0;
+    loss = 0.0;
+}
+
 /**
  * Calculates gradient for output layer node.
  * 
@@ -45,7 +55,7 @@ Node::Node(int idx, int output_weight_dim, bool bias_node, double weight_init)
 */
 void Node::output_gradient(const int y_true)
 {
-    loss = 0.0;
+    loss = 0.0; // Not necessary
     loss = output_value - y_true;
     // Sjekk en video om dette --> Trooor sigmoid skal med altså
     // double delta_output = out_err - y_true;

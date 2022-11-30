@@ -30,20 +30,28 @@ Layers::Layers() {}
 */
 Layers::Layers(int layer_index, int num_nodes, int next_layer_dim)
 {
-    output_weight_dim = next_layer_dim;
-    total_nodes = num_nodes + 1; // Add bias node
-    layer_idx = layer_index;
+    set_output_weight_dim(next_layer_dim);
+    set_total_nodes(num_nodes+1);
+    set_layer_idx(layer_index);
     // learning_rate = 0.1;
 
     // Bias node is the last iteration (node = total_nodes-1)
-    for (int node = 0; node < total_nodes; node++){ 
-        if (node == total_nodes-1){ // Create bias node with "output value=1.0"
-            map_of_nodes[node] = Node(node, next_layer_dim, true);
+    for (int node = 0; node < get_total_nodes(); node++){ 
+        if (node == get_total_nodes()-1){ // Create bias node with "output value=1.0"
+            map_of_nodes[node] = Node(node, get_output_weight_dim(), true);
         }
         else{
-            map_of_nodes[node] = Node(node, next_layer_dim);
+            map_of_nodes[node] = Node(node, get_output_weight_dim());
         }
     }
+}
+
+Layers::~Layers()
+{
+    map_of_nodes.clear();
+    set_output_weight_dim(0);
+    set_layer_idx(0);
+    set_total_nodes(0);
 }
 
 /**
@@ -63,10 +71,10 @@ void Layers::hidden_gradients(Layers &right_layer)
     double gradient_value;
 
     // Loop through every node in current layer (incl. bias)
-    for (int curr_n = 0; curr_n < total_nodes; curr_n++){
+    for (int curr_n = 0; curr_n < get_total_nodes(); curr_n++){
 
         // Loop through every node in layer to the right (excl. bias)
-        for (int right_n = 0; right_n < right_layer.total_nodes-1; right_n++){
+        for (int right_n = 0; right_n < right_layer.get_total_nodes()-1; right_n++){
             sum_delta_hidden += 
             map_of_nodes[curr_n].output_weights[right_n] * 
             right_layer.map_of_nodes[right_n].get_gradient();
@@ -92,11 +100,11 @@ void Layers::update_weights(Layers &left_layer, double learning_rate)
 {
     double delta_weight = 0.0;
     // Loop through every node in current layer (not bias)
-    for (int curr_n = 0; curr_n < total_nodes-1; curr_n++){
+    for (int curr_n = 0; curr_n < get_total_nodes()-1; curr_n++){
         Node &curr_node = map_of_nodes[curr_n];
 
         // Loop through every node in left layer (incl bias)
-        for (int left_n = 0; left_n < left_layer.total_nodes; left_n++){
+        for (int left_n = 0; left_n < left_layer.get_total_nodes(); left_n++){
             Node &left_node = left_layer.map_of_nodes[left_n];
 
             double delta_weight = 
@@ -117,12 +125,12 @@ void Layers::activate_nodes(Layers &left_layer)
     double out_value;
 
     // Loop through nodes in current layer (excl. bias)
-    for (int n_curr = 0; n_curr < total_nodes-1; n_curr++){
+    for (int n_curr = 0; n_curr < get_total_nodes()-1; n_curr++){
         double z = 0.0;
         current_node_id = map_of_nodes[n_curr].get_curr_node_idx();
 
         // Loop through all nodes (incl bias) in previous layer and add sum of: 
-        for (int n_prev = 0; n_prev < left_layer.total_nodes; n_prev++){
+        for (int n_prev = 0; n_prev < left_layer.get_total_nodes(); n_prev++){
             Node &prev_node = left_layer.map_of_nodes[n_prev];
             z += prev_node.output_weights[n_curr] * prev_node.get_output_value();
         }
