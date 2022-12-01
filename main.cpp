@@ -12,11 +12,11 @@
 
 int main()
 {
-    // Read data from csv file
+    // Read data from csv file.
     ReadData read_data;
-    read_data.create_dataset("iris.csv");
+    read_data.create_dataset("iris.csv"); // Iris dataset
 
-    // Create 
+    // Create mlp
     MLP mlp(read_data.get_my_data()[0]);
     mlp.set_learning_rate(0.3);
 

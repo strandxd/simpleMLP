@@ -14,9 +14,9 @@ int main()
     ReadData read_data;
     read_data.create_dataset("iris.csv");
 
-    int max_layers = 1000;
+    int max_layers = 5000;
 
-    for (int num_layer = 1; num_layer < max_layers; num_layer += 50){
+    for (int num_layer = 20; num_layer < max_layers; num_layer += 200){
         auto start = std::chrono::high_resolution_clock::now();
 
         run_mlp(read_data.get_my_data(), read_data.get_y_true(), num_layer);

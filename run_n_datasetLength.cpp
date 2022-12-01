@@ -10,9 +10,9 @@ std::vector<int> generate_y_true(int max_rows);
 
 int main()
 {
-    int row_number = 100101; // 100,000
+    int row_number = 300100; // 100,000
 
-    for (int max_rows = 100; max_rows < row_number; max_rows += 5000){
+    for (int max_rows = 100; max_rows < row_number; max_rows += 10000){
         // Generate random dataset
         std::vector< std::vector<double> > sample_matrix = generate_matrix(max_rows);
         std::vector<int> sample_y_true = generate_y_true(max_rows);
@@ -28,6 +28,7 @@ int main()
             mlp.feed_forward();
             mlp.backpropagate(sample_y_true[iter]);
         }
+
         auto end = std::chrono::high_resolution_clock::now();
         double time = double(std::chrono::duration_cast <std::chrono::nanoseconds> 
                      (end-start).count());
@@ -55,7 +56,7 @@ std::vector<int> generate_y_true(int max_rows)
 */
 std::vector< std::vector<double> > generate_matrix(int max_rows)
 {
-    int cols = 5;
+    int cols = 20;
     std::vector< std::vector<double> > simulated_matrix(max_rows, std::vector<double>(cols));
 
     for (int row = 0; row < max_rows; row++){

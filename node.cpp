@@ -45,7 +45,7 @@ Node::~Node()
     output_value = 0;
     curr_node_idx = 0;
     gradient = 0.0;
-    loss = 0.0;
+    error = 0.0;
 }
 
 /**

@@ -27,7 +27,7 @@ class Node
         double get_output_value() { return output_value; }
         int get_curr_node_idx() { return curr_node_idx; }
         const double get_gradient() { return gradient; }
-        double get_loss() { return loss; }
+        double get_error() { return error; }
 
         std::vector<double> output_weights; // weights for given node. n vector
     
@@ -35,7 +35,7 @@ class Node
         double output_value; // Post activation value
         int curr_node_idx;
         double gradient;
-        double loss;
+        double error;
 };
 
 #endif
