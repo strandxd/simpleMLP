@@ -20,7 +20,7 @@ int main()
     MLP mlp(read_data.get_my_data()[0]);
     mlp.set_learning_rate(0.3);
 
-    int epoch = 5;
+    int epoch = 25;
     int iter = 1;
 
     // Loop through e epochs

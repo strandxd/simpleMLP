@@ -10,7 +10,7 @@ std::vector<int> generate_y_true(int max_rows);
 
 int main()
 {
-    int row_number = 300100; // 100,000
+    int row_number = 300000; // 300,000
 
     for (int max_rows = 100; max_rows < row_number; max_rows += 10000){
         // Generate random dataset
