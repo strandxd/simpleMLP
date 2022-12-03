@@ -39,6 +39,7 @@ class Node
         double gradient;
         double error;
         double loss;
+        
 };
 
 #endif
