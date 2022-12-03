@@ -109,7 +109,7 @@ void MLP::insert_sample(std::vector<double> const &input_data)
  * Feed forward process of neural network. From first hidden layer to output layer, calculate 
  * activatons of indivi dual nodes in each layer.
 */
-void MLP::feed_forward()
+void MLP::feed_forward(const int y_true)
 {
     // Loop through 1st hidden layer to (including) ouput layer
     for (int layer = 1; layer < map_of_layers.size(); layer++){
@@ -117,6 +117,10 @@ void MLP::feed_forward()
         Layers &current_layer = map_of_layers[layer];
 
         current_layer.activate_nodes(left_layer);
+
+        if (layer == map_of_layers.size()-1){
+            map_of_layers[layer].map_of_nodes[0].calculate_loss(y_true);
+        }
     }
 }
 
@@ -133,6 +137,9 @@ void MLP::backpropagate(const int y_true)
 {
     // Step 1: Output layer gradient
     Layers &output_layer = map_of_layers[map_of_layers.rbegin()->first];
+    // Derivative of loss function:
+    // (output_value - y_true) * output_value * (1 - outputvalue), i.e.:
+    // (sigmoid(z) - y_true) * sigmoid(z) * (1 - sigmoid(z))
     output_layer.map_of_nodes[0].output_gradient(y_true);
 
     // Step 2: Hidden layer gradients
@@ -165,7 +172,7 @@ void MLP::print_results(const int y_true)
 
     std::cout << "True value: " << y_true << std::endl;;
     std::cout << "Predicted value: " << predicted_value << std::endl;
-    // std::cout << "Loss: " << output_layer.map_of_nodes[0].get_loss() << std::endl;
+    std::cout << "Loss: " << output_layer.map_of_nodes[0].get_loss() << std::endl;
 }
 
 /**

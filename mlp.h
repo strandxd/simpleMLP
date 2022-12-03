@@ -18,7 +18,7 @@ class MLP
 
         // Run network
         void insert_sample(std::vector<double> const &input_data);
-        void feed_forward();
+        void feed_forward(const int y_true);
         void backpropagate(const int y_true);
 
         // Set functions

@@ -17,6 +17,7 @@ class Node
         double sigmoid(double z);
         double sigmoid_derivative();
         void output_gradient(const int y_true);
+        void calculate_loss(const int y_true);
 
         // Set functions
         void set_output_value(double value) { output_value = value; }
@@ -28,6 +29,7 @@ class Node
         int get_curr_node_idx() { return curr_node_idx; }
         const double get_gradient() { return gradient; }
         double get_error() { return error; }
+        double get_loss() { return loss; }
 
         std::vector<double> output_weights; // weights for given node. n vector
     
@@ -36,6 +38,7 @@ class Node
         int curr_node_idx;
         double gradient;
         double error;
+        double loss;
 };
 
 #endif
