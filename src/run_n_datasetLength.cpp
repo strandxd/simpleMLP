@@ -37,9 +37,7 @@ int main()
     }
 }
 
-/**
- * Generate y true values
-*/
+// Generate y true values
 std::vector<int> generate_y_true(int max_rows)
 {
     std::vector<int> simulated_y_true(max_rows);
@@ -51,9 +49,7 @@ std::vector<int> generate_y_true(int max_rows)
     return simulated_y_true;
 }
 
-/**
- * Generate matrix with random numbers
-*/
+// Generate matrix with random numbers
 std::vector< std::vector<double> > generate_matrix(int max_rows)
 {
     int cols = 20;

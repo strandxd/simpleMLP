@@ -26,7 +26,6 @@ Node::Node(int idx, int output_weight_dim, bool bias_node, double weight_init,
            bool custom_weight_init)
 {
     curr_node_idx = idx;
-    // NBNB: Fix this a bit cleaner. Dont make array then add numbers
     output_weights.resize(output_weight_dim);
 
     // Initialize weights

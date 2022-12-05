@@ -1,16 +1,14 @@
 #include <iostream>
 #include <vector>
-#include <time.h>
-#include <assert.h>
-#include <fstream>
-#include <string>
-#include <sstream>
 
 #include "mlp.h"
 #include "layers.h"
 #include "read_data.h"
 
-// Runs mlp on iris dataset. Main showcase of the neural network.
+/**Runs mlp on iris dataset. Main showcase of the neural network.
+ * Pretty decent results with {1 layer, 4 nodes, 5-6 epochs}. Displays the networks ability to 
+ * seperate data
+*/
 int main()
 {
     bool show_gradient;
@@ -18,6 +16,7 @@ int main()
     int epoch;
 
     // Read data from csv file.
+    // NB: Need to be inside /bin to run file
     ReadData read_data;
     read_data.create_dataset("../data/iris.csv"); // Iris dataset
 

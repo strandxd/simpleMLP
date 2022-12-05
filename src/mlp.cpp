@@ -5,7 +5,7 @@
 
 #include "mlp.h"
 
-double MLP::learning_rate = 0.1; // Set learning rate
+double MLP::learning_rate = 0.1; // Set default learning rate
 
 /// @brief Empty constructor
 MLP::MLP() {}
@@ -22,7 +22,7 @@ MLP::MLP() {}
  * Part 2: Loop through layers and add <Layers> object to map.
  * 
  * @param input_row: First row of input matrix (to define input layer dimension).
- * @param num_layers: Number of layers in network (mainly used for test cases).
+ * @param num_layers: Number of layers in network. Mainly used for test cases.
  * @param default_init: Default initiation of network (n_layers=1, n_nodes=4). Mainly for testing.
 */
 MLP::MLP(std::vector<double> const &input_row, int num_layers, bool default_init)
@@ -96,13 +96,8 @@ MLP::~MLP()
 void MLP::insert_sample(std::vector<double> const &input_data)
 {
     int total_input_nodes = map_of_layers[0].get_total_nodes();
-    for (int i = 0; i < total_input_nodes; i++){
-        if (i == total_input_nodes-1){ // Bias node
-            continue; // Already sat output value when initializing nodes
-        }
-        else{
-            map_of_layers[0].map_of_nodes[i].set_output_value(input_data[i]);
-        }
+    for (int i = 0; i < total_input_nodes-1; i++){
+        map_of_layers[0].map_of_nodes[i].set_output_value(input_data[i]);
     }
 }
 
@@ -186,10 +181,10 @@ void MLP::print_results(const int y_true)
  * 
  * (*)Vanishing gradient problem occurs once you get deeper into the layers. As sigmoid function
  * has a maximum slope of 0.25, the max value you can time each node with is 0.25 per layer. 
- * Getting deeper into the layers you will time each node by 0.25*0.25*0.25... etc at max. This 
+ * Getting deeper into the layers you will time each node by 0.25*0.25*0.25... etc., at max. This 
  * becomes a very small number as you move backwards through the layers and the weights essentially 
- * stops updating. There are several techniques to deal with this, not implemented in this rather 
- * simple mlp implementation.
+ * stops updating. Ways of dealing with this are not implemented in this version, but maybe in the 
+ * future.
 */
 void MLP::print_output_values(bool show_gradient)
 {

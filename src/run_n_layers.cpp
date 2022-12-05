@@ -12,6 +12,7 @@ void run_mlp(std::vector< std::vector<double> > dataset, std::vector<double> y_t
 int main()
 {
     // Read data from csv file
+    // NB: Need to be inside /bin to run file
     ReadData read_data;
     read_data.create_dataset("../data/iris.csv");
 

@@ -1,7 +1,6 @@
 #include <iostream>
 #include <vector>
 #include <map>
-#include <assert.h>
 #include <math.h>
 
 #include "layers.h"
@@ -106,6 +105,7 @@ void Layers::update_weights(Layers &left_layer, double learning_rate)
         for (int left_n = 0; left_n < left_layer.get_total_nodes(); left_n++){
             Node &left_node = left_layer.map_of_nodes[left_n];
 
+            // Opposite direction of gradient
             double delta_weight = 
             -(learning_rate * left_node.get_output_value() * curr_node.get_gradient());
 
