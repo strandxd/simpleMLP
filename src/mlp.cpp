@@ -82,6 +82,7 @@ MLP::MLP(std::vector<double> const &input_row, int num_layers, bool default_init
     }
 }
 
+/// @brief Deconstructor
 MLP::~MLP()
 {
     map_of_layers.clear();
@@ -106,18 +107,20 @@ void MLP::insert_sample(std::vector<double> const &input_data)
 }
 
 /**
- * Feed forward process of neural network. From first hidden layer to output layer, calculate 
- * activatons of indivi dual nodes in each layer.
+ * Feed forward process of neural network. 
+ * 
+ * From first hidden layer to output layer, calculate activatons of individual nodes in each layer.
 */
 void MLP::feed_forward(const int y_true)
 {
-    // Loop through 1st hidden layer to (including) ouput layer
+    // Loop through first hidden layer to ouput layer
     for (int layer = 1; layer < map_of_layers.size(); layer++){
         Layers &left_layer = map_of_layers[layer-1];
         Layers &current_layer = map_of_layers[layer];
 
         current_layer.activate_nodes(left_layer);
 
+        // Calculate loss from output layer (prediction)
         if (layer == map_of_layers.size()-1){
             map_of_layers[layer].map_of_nodes[0].calculate_loss(y_true);
         }
@@ -137,13 +140,10 @@ void MLP::backpropagate(const int y_true)
 {
     // Step 1: Output layer gradient
     Layers &output_layer = map_of_layers[map_of_layers.rbegin()->first];
-    // Derivative of loss function:
-    // (output_value - y_true) * output_value * (1 - outputvalue), i.e.:
-    // (sigmoid(z) - y_true) * sigmoid(z) * (1 - sigmoid(z))
     output_layer.map_of_nodes[0].output_gradient(y_true);
 
     // Step 2: Hidden layer gradients
-    // Calculate hidden layer gradient (from last hidden layer down to (including) 1st hidden layer)
+    // From last hidden layer down to first hidden layer
     for (int layer = map_of_layers.size()-2; layer > 0; layer--){
         Layers &right_layer = map_of_layers[layer + 1];
 
@@ -160,7 +160,7 @@ void MLP::backpropagate(const int y_true)
 }
 
 /**
- * Print output for single iteration (one sample).
+ * Print output for each iteration (one sample).
  * 
  * @param y_true: true target value.
 */
@@ -176,9 +176,22 @@ void MLP::print_results(const int y_true)
 }
 
 /**
- * Prints output values from each node in every layer.
+ * Prints output values from each node in every layer for each iteration (one sample).
+ * 
+ * @param show_gradient: display gradient next to node in every layer.
+ * 
+ * NOTE: To showcase the vanishing gradient problem(*) for large networks (many layers) we added the 
+ * option to display gradients at each node in every layer.
+ * NB: Ignore gradients at input layer and at bias nodes.
+ * 
+ * (*)Vanishing gradient problem occurs once you get deeper into the layers. As sigmoid function
+ * has a maximum slope of 0.25, the max value you can time each node with is 0.25 per layer. 
+ * Getting deeper into the layers you will time each node by 0.25*0.25*0.25... etc at max. This 
+ * becomes a very small number as you move backwards through the layers and the weights essentially 
+ * stops updating. There are several techniques to deal with this, not implemented in this rather 
+ * simple mlp implementation.
 */
-void MLP::print_output_values()
+void MLP::print_output_values(bool show_gradient)
 {
     for (int layer = 0; layer < map_of_layers.size(); layer++){
         if (layer == 0){
@@ -190,25 +203,25 @@ void MLP::print_output_values()
         else{
             std::cout << "Hidden layer #" << layer << std::endl;      
         }
-        for (int node = 0; node < map_of_layers[layer].map_of_nodes.size(); node++){
-            double node_out = map_of_layers[layer].map_of_nodes[node].get_output_value();
-            std::cout << "Node #" << node << ". Value: " << node_out << std::endl;
-        }   
+
+        if (show_gradient){
+            for (int node = 0; node < map_of_layers[layer].map_of_nodes.size(); node++){
+                double node_out = map_of_layers[layer].map_of_nodes[node].get_output_value();
+                double grad = map_of_layers[layer].map_of_nodes[node].get_gradient();
+
+                std::cout << "Node #" << node << ". Value: " << node_out <<
+                ". [Gradient: " << grad << "]" << std::endl;
+            }
+        }
+        else{
+            for (int node = 0; node < map_of_layers[layer].map_of_nodes.size(); node++){
+                double node_out = map_of_layers[layer].map_of_nodes[node].get_output_value();
+                double grad = map_of_layers[layer].map_of_nodes[node].get_gradient();
+
+                std::cout << "Node #" << node << ". Value: " << node_out << std::endl;
+            }
+        }
+
         std::cout << std::endl;
     }
 }
-
-// void MLP::print_outputs()
-// {
-//     int lay_c = 0;
-//     for (auto l_itr = map_of_layers.begin(); l_itr != map_of_layers.end(); l_itr++){
-//         std::cout << "Layer #" << lay_c << std::endl;
-//         std::cout << "Output: ";
-//         for (auto n_itr = l_itr->second.map_of_nodes.begin(); 
-//         n_itr != l_itr->second.map_of_nodes.end(); n_itr++){
-//             std::cout << n_itr->second.output_value << " ";
-//         }
-//         lay_c++;
-//         std::cout << std::endl;
-//     }
-// }

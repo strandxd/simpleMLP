@@ -8,11 +8,12 @@
 
 void run_mlp(std::vector< std::vector<double> > dataset, std::vector<double> y_true, int n_layers);
 
+// Show time increase as the number of layers increases (iris dataset)
 int main()
 {
     // Read data from csv file
     ReadData read_data;
-    read_data.create_dataset("iris.csv");
+    read_data.create_dataset("data/iris.csv");
 
     int max_layers = 5000;
 
@@ -36,13 +37,8 @@ void run_mlp(std::vector< std::vector<double> > dataset, std::vector<double> y_t
     mlp.set_learning_rate(0.2);
 
     for (int iter = 0; iter < dataset.size(); iter++){
-        // std::cout << "EPOCH #" << e+1 << ". TOTAL ITERATION #" << iter+1 << std::endl;
-        // y_true should have as many inputs as rows in dset
-
-        // One iteration contains following steps:
         mlp.insert_sample(dataset[iter]);
-        mlp.feed_forward();
-        // mlp.print_results(read_data.get_y_true()[iter]);
+        mlp.feed_forward(y_true[iter]);
         mlp.backpropagate(y_true[iter]);
     }
 }

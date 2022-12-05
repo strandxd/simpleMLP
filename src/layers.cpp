@@ -14,15 +14,13 @@
  * This then also applies when we loop through the layer in reverse (backpropagation).
 */
 
-// double Layers::learning_rate = 0.1; // Set learning rate
 
-
-/// @brief Empty constructor
+/// @brief Empty constructor (needed for map construction)
 Layers::Layers() {}
 
 /**
  * Constructing layer object in network. Initializes layer with a user specifed number of nodes. 
- * Layer gets added to a map of <layerNumber, layerObject>.
+ * Layer gets added to a map of <layerId, layerObject>.
  * 
  * @param layer_index: layer number.
  * @param num_nodes: number of nodes in layer (excluding bias node).
@@ -33,7 +31,6 @@ Layers::Layers(int layer_index, int num_nodes, int next_layer_dim)
     set_output_weight_dim(next_layer_dim);
     set_total_nodes(num_nodes+1);
     set_layer_idx(layer_index);
-    // learning_rate = 0.1;
 
     // Bias node is the last iteration (node = total_nodes-1)
     for (int node = 0; node < get_total_nodes(); node++){ 
@@ -46,6 +43,7 @@ Layers::Layers(int layer_index, int num_nodes, int next_layer_dim)
     }
 }
 
+/// @brief Deconstructor
 Layers::~Layers()
 {
     map_of_nodes.clear();
@@ -95,6 +93,7 @@ void Layers::hidden_gradients(Layers &right_layer)
  * correct node in current layer.
  * 
  * @param left_layer: reference of layer object to the left of current layer.
+ * @param learning_rate: learning rate. Decides how big gradient steps should be.
 */
 void Layers::update_weights(Layers &left_layer, double learning_rate)
 {
@@ -115,14 +114,17 @@ void Layers::update_weights(Layers &left_layer, double learning_rate)
     }
 }
 
-// TODO: write this
 /**
- * Activation of nodes
+ * Related to feed forward. 
+ * Activation of nodes.
+ * 
+ * For every node in the current layer, loop through layer to the left and add the sum of the 
+ * corresponding weight * output value (i.e. take dot product of corresponding weights and output).
+ * Activate nodes by sigmoid function and set output value equal result.
 */
 void Layers::activate_nodes(Layers &left_layer)
 {
     // Inside current layer, has access to prev layer
-    int current_node_id;
     double out_value;
 
     // Loop through nodes in current layer (excl. bias)

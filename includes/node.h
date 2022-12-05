@@ -10,7 +10,7 @@ class Node
         // Constructors & destructor
         Node();
         Node(int idx, int output_weight_dim, bool bias_node=false, 
-             double weight_init=0.5);
+             double weight_init=0.5, bool custom_weight_init=false);
         ~Node();
 
         // Activations & calculations
@@ -28,7 +28,6 @@ class Node
         double get_output_value() { return output_value; }
         int get_curr_node_idx() { return curr_node_idx; }
         const double get_gradient() { return gradient; }
-        double get_error() { return error; }
         double get_loss() { return loss; }
 
         std::vector<double> output_weights; // weights for given node. n vector
@@ -37,7 +36,6 @@ class Node
         double output_value; // Post activation value
         int curr_node_idx;
         double gradient;
-        double error;
         double loss;
         
 };

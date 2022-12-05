@@ -15,6 +15,7 @@ class Layers
         Layers(int layer_index, int num_nodes, int next_layer_dim);
         ~Layers();
 
+        // Calculations
         void activate_nodes(Layers &prev_layer);
         void hidden_gradients(Layers &right_layer);
         void update_weights(Layers &left_layer, double learning_rate);

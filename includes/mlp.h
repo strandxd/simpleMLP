@@ -26,7 +26,7 @@ class MLP
 
         // Print
         void print_results(const int y_true);
-        void print_output_values();
+        void print_output_values(bool show_gradient = false);
 
         std::map<int, Layers> map_of_layers;
 

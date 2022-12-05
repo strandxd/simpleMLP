@@ -8,6 +8,7 @@
 std::vector< std::vector<double> > generate_matrix(int max_rows);
 std::vector<int> generate_y_true(int max_rows);
 
+// Show time increase as the length of dataset increases (samples(/rows), randomly generated data)
 int main()
 {
     int row_number = 300000; // 300,000
@@ -17,15 +18,14 @@ int main()
         std::vector< std::vector<double> > sample_matrix = generate_matrix(max_rows);
         std::vector<int> sample_y_true = generate_y_true(max_rows);
 
-        // Initialize mlp classes
+        // Initialize mlp class
         MLP mlp(sample_matrix[0], true);
         mlp.set_learning_rate(0.2);
 
         auto start = std::chrono::high_resolution_clock::now();
         for (int iter = 0; iter < sample_matrix.size(); iter++){
-            // One iteration contains following steps:
             mlp.insert_sample(sample_matrix[iter]);
-            mlp.feed_forward();
+            mlp.feed_forward(sample_y_true[iter]);
             mlp.backpropagate(sample_y_true[iter]);
         }
 

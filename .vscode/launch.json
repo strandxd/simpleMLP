@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "c:/Users/hakon/Skole/NMBU_8/INF205/project_done",
-      "program": "c:/Users/hakon/Skole/NMBU_8/INF205/project_done/build/Debug/outDebug",
+      "cwd": "c:/Users/hakon/Skole/NMBU_8/INF205/inf205_project_new/headers",
+      "program": "c:/Users/hakon/Skole/NMBU_8/INF205/inf205_project_new/headers/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [

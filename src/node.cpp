@@ -6,13 +6,14 @@
 
 #include "node.h"
 
+
 /// @brief Empty constructor (needed for map construction)
 Node::Node() {}
 
 /**
- * Constructing node in layer with randomly initialized weight dimension. Additionally sets output 
+ * Constructing node in layer with randomly initialized weights. Additionally sets output 
  * value for bias node to 1.
- * Node gets added to a map of <nodeNumer, nodeObject>.
+ * Node gets added to a map of <nodeId, nodeObject>.
  * 
  * NOTE: Could manually exchange random weight initialization with weight init (set to 0.5 if not
  * specified). 
@@ -21,15 +22,23 @@ Node::Node() {}
  * @param output_weight_dim: number of nodes (not incl bias) in next layer.
  * @param weight_init: value of initial weight.
 */
-Node::Node(int idx, int output_weight_dim, bool bias_node, double weight_init)
+Node::Node(int idx, int output_weight_dim, bool bias_node, double weight_init, 
+           bool custom_weight_init)
 {
     curr_node_idx = idx;
     // NBNB: Fix this a bit cleaner. Dont make array then add numbers
     output_weights.resize(output_weight_dim);
 
     // Initialize weights
-    for (int w = 0; w < output_weight_dim; w++){
-        output_weights[w] = rand() / double(RAND_MAX);
+    if (custom_weight_init){ // Default weight_init = 0.5
+        for (int w = 0; w < output_weight_dim; w++){
+            output_weights[w] = weight_init;
+        }
+    }
+    else{
+        for (int w = 0; w < output_weight_dim; w++){
+            output_weights[w] = rand() / double(RAND_MAX);
+        }
     }
 
     // Initialize output value for bias node
@@ -38,29 +47,30 @@ Node::Node(int idx, int output_weight_dim, bool bias_node, double weight_init)
     }
 }
 
-
+/// @brief Deconstructor
 Node::~Node()
 {
     output_weights.clear();
     output_value = 0;
     curr_node_idx = 0;
     gradient = 0.0;
-    error = 0.0;
 }
 
 /**
  * Calculates gradient for output layer node.
+ * Derivative of loss function:
+ * (output_value - y_true) * output_value * (1 - outputvalue), i.e.:
+ * (sigmoid(z) - y_true) * sigmoid(z) * (1 - sigmoid(z))
  * 
  * @param y_true: true target value.
 */
 void Node::output_gradient(const int y_true)
 {
-    error = output_value - y_true;
-    gradient = error * sigmoid_derivative();
+    gradient = (output_value - y_true) * sigmoid_derivative();
 }
 
 /**
- * Squared error loss function (1/2 * SE just to make derivative cleaner).
+ * Squared error loss function (1/2 to make derivative cleaner).
  * 
  * @param y_true: true target value
 */
@@ -84,11 +94,6 @@ double Node::sigmoid(double z)
 /**
  * Derivative of sigmoid function. Used for calculating gradients.
  * Derivative is: sigmoid(z) * (1 - sigmoid(z)), and as we know, sigmoid(z) = output_value.
- * 
- * NB: Not implemented yet, maybe do it! or delete this!
- * Note: The nodes are always activated before calling sigmoid_derivative. Although, to add a
- * safety mechanism, we initiate the output_value to -1 and check if the value is >= 0 (as it will 
- * always be using the sigmoid function. Setting >= to avoid round-off errors).
 */
 double Node::sigmoid_derivative()
 {
