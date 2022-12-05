@@ -1,8 +1,8 @@
 # Clean windows vs clean other OS
 ifeq ($(OS),Windows_NT) 
-	RM = del /Q /F
+	RM = del
 else
-	RM = rm -rf
+	RM = rm
 endif
 
 # Folders
@@ -45,5 +45,5 @@ $(OBJ)/%.o : $(SRC)/%.cpp
 	g++ $(INC) -c -o $@ $<
 
 clean:
-	$(RM) $(BIN)
-	$(RM) $(OBJ)
+	$(RM) $(BIN)\*.exe
+	$(RM) $(OBJ)\*.o
