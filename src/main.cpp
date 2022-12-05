@@ -19,7 +19,7 @@ int main()
 
     // Read data from csv file.
     ReadData read_data;
-    read_data.create_dataset("data/iris.csv"); // Iris dataset
+    read_data.create_dataset("../data/iris.csv"); // Iris dataset
 
     // Create mlp
     MLP mlp(read_data.get_my_data()[0]);

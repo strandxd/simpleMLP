@@ -1,4 +1,5 @@
 # Clean windows vs clean other OS
+# See (*) comment before "clean"
 ifeq ($(OS),Windows_NT) 
 	RM = del
 else
@@ -44,6 +45,8 @@ run_n_datasetLength : $(RUN_N_DATASETLENGTH_OBJECTS)
 $(OBJ)/%.o : $(SRC)/%.cpp
 	g++ $(INC) -c -o $@ $<
 
+# In order to push folders to git, we went with this solution to keep the .gitkeep files (and folders)
+# Originally it was "RM = del /Q /F" for windows and "RM = rm -rf" for mac.
 clean:
 	$(RM) $(BIN)\*.exe
 	$(RM) $(OBJ)\*.o

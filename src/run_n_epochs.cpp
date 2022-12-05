@@ -13,7 +13,7 @@ int main()
 {
     // Read data from csv file
     ReadData read_data;
-    read_data.create_dataset("data/iris.csv");
+    read_data.create_dataset("../data/iris.csv");
 
     // Set epochs
     int epochs = 20501;
