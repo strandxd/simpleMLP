@@ -20,7 +20,7 @@ void ReadData::create_dataset(std::string filename)
     // Start code from: https://java2blog.com/read-csv-file-in-cpp/
     std::string fname = filename;
     
-    std::vector<std::vector<std::string>> content;
+    std::vector< std::vector<std::string> > content;
     std::vector<std::string> row;
     std::string line, word;
     
